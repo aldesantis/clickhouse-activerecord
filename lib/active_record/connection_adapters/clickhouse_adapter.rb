@@ -135,7 +135,11 @@ module ActiveRecord
 
       # Support SchemaMigration from v5.2.2 to v6+
       def schema_migration # :nodoc:
-        ClickhouseActiverecord::SchemaMigration
+        ClickhouseActiverecord::SchemaMigration.new(self)
+      end
+
+      def internal_metadata # :nodoc:
+        ClickhouseActiverecord::InternalMetadata.new(self)
       end
 
       def migrations_paths
@@ -143,7 +147,7 @@ module ActiveRecord
       end
 
       def migration_context # :nodoc:
-        ClickhouseActiverecord::MigrationContext.new(migrations_paths, schema_migration)
+        ClickhouseActiverecord::MigrationContext.new(migrations_paths, schema_migration, internal_metadata)
       end
 
       def arel_visitor # :nodoc:
