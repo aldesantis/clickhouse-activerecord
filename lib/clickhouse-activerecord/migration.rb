@@ -24,10 +24,6 @@ module ClickhouseActiverecord
         t.datetime :ver, null: false, default: -> { 'now()' }
       end
     end
-
-    def all_versions
-      final.where(active: 1).order(:version).pluck(:version)
-    end
   end
 
   class InternalMetadata < ::ActiveRecord::InternalMetadata
@@ -99,7 +95,7 @@ module ClickhouseActiverecord
 
     def get_all_versions
       if schema_migration.table_exists?
-        schema_migration.all_versions.map(&:to_i)
+        schema_migration.integer_versions
       else
         []
       end
